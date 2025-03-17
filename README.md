@@ -3,7 +3,7 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/recikk/random-assets/refs/heads/main/lime_nobg.gif" style="width: 150px; height: 150px;">
   <h3>Lime Spammer</h3>
-  <p>The BEST FREE discord raid tool out atm 🍋‍🟩</p>
+  <p>The BEST discord raid tool out atm 🍋‍🟩</p>
   <br>
 </div>
 
