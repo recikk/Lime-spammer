@@ -623,7 +623,7 @@ class thread:
                 except Exception as e:
                     self.log.error(e)
 
-__headers = {
+tempheaders = {
     'Accept': '*/*',
     'Accept-Encoding': 'gzip, deflate, br, zstd',
     'Accept-Language': f'en-US,en;q=0.9',
@@ -637,16 +637,16 @@ __headers = {
     'X-Discord-Timezone': 'Europe/Warsaw',
     'X-Super-Properties': 'eyJvcyI6IldpbmRvd3MiLCJicm93c2VyIjoiQ2hyb21lIiwiZGV2aWNlIjoiIiwic3lzdGVtX2xvY2FsZSI6ImVuLVVTIiwiaGFzX2NsaWVudF9tb2RzIjpmYWxzZSwiYnJvd3Nlcl91c2VyX2FnZW50IjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEzNC4wLjAuMCBTYWZhcmkvNTM3LjM2IEVkZy8xMzQuMC4wLjAiLCJicm93c2VyX3ZlcnNpb24iOiIxMzQuMC4wLjAiLCJvc192ZXJzaW9uIjoiMTAiLCJyZWZlcnJlciI6Imh0dHBzOi8vZGlzY29yZC5jb20vP2Rpc2NvcmR0b2tlbj1NVE16T1RBeU9EQTROemMwT0RRek1Ua3lOdy5HVTd2QVMuTEpWdFpnU2tXb2xkSWpsbU1OMTJYUTF0b0tld191aG8xRzhKVXciLCJyZWZlcnJpbmdfZG9tYWluIjoiZGlzY29yZC5jb20iLCJyZWZlcnJlcl9jdXJyZW50IjoiIiwicmVmZXJyaW5nX2RvbWFpbl9jdXJyZW50IjoiIiwicmVsZWFzZV9jaGFubmVsIjoic3RhYmxlIiwiY2xpZW50X2J1aWxkX251bWJlciI6Mzc3MjA3LCJjbGllbnRfZXZlbnRfc291cmNlIjpudWxsfQ=='
 } 
-__sess = tls_client.Session(client_identifier='chrome_120')
-__cookier = __sess.get('https://discord.com', headers=__headers).cookies
+tempsess = tls_client.Session(client_identifier='chrome_120')
+cookier = tempsess.get('https://discord.com', headers=tempheaders).cookies
 
 class client:
     def __init__(self, token=None):
-        self.headers = __headers
+        self.headers = tempheaders
         if token is not None:
             self.headers['Authorization'] = token
         self.sess = tls_client.Session(client_identifier='chrome_120')
-        self.sess.cookies.update(__cookier)
+        self.sess.cookies.update(cookier)
 
 # Btw before flaming me this code is made to be worse bypassing than the paid for obvius reasons 
 class lime:
@@ -982,12 +982,16 @@ class lime:
         
         def main(self):
             ui().prep(self.name, 1)
-            self.serverid = ui().ask('Server ID')
-            self.channelid = ui().ask('Channel ID')
-            self.nostop = ui().ask('No break on error (wont stop on a unchandled error, like automod flag etc)', True)
             self.delay = ui().delayask()
 
             ui().prep(self.name, 2)
+
+            thread(
+                func=self.check,
+                tokens=open('data\\tokens.txt', 'r').read().splitlines(),
+                args=[],
+                delay=self.delay
+            )
 
             if self.valids:
                 save = ui().ask('Replace tokens.txt with only valid tokens', True)
@@ -999,14 +1003,6 @@ class lime:
                 self.log.info('Blud has no valid tokens 😭😭😭')
 
             self.log.info('Token sorting is paid only')
-
-
-            thread(
-                func=self.check,
-                tokens=open('data\\tokens.txt', 'r').read().splitlines(),
-                args=[],
-                delay=self.delay
-            )
 
             self.log.info(f'EV > PAID ONLY No EV > PAID ONLY PV > PAID ONLY No PV > PAID ONLY Email > PAID ONLY No email > PAID ONLY')
             self.log.info(f'Valid > {len(self.valids)} Locked > {len(self.locked)} Nitro > PAID ONLY Nonitro > PAID ONLY Failed > {len(self.failed)}')
